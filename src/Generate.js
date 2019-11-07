@@ -44,10 +44,12 @@ export default function Generate() {
   return(
     <div className="wrapper">
       <div className="selects">
+        <p>选择行、列数，每次重选需要手动改变一下面输入框</p>
         <input onChange={handleChangeRow} className="row" type="number" defaultValue={3} min={0} />
         <input onChange={handleChangeCol} className="col" type="number" defaultValue={3} min={0} />
       </div>
-      <p>超出可左右滑动，第一行为表头</p>
+      <p>v 1.0</p>
+      <p>超出可左右滑动，第一行为表头，在下面表格中可以填写markdown语法，类似`# header`</p>
       <ul className="table">
       {_.range(Number(row) + 1).map((i) => 
         <li key={i + '0'}>{
@@ -60,10 +62,11 @@ export default function Generate() {
       <div className="result">
         <PrismCode component="pre" className="language-html">
           {prettier.format(`<table>
-              ${fileds.map(filed =>{
+              ${fileds.map((filed, i) =>{
                 return `<tr>
                   ${filed.map(f => {
-                    return `<td>${converter.makeHtml(f)}</td>`
+                    const tag = i === 0 ? 'th' : 'td';
+                    return `<${tag}>${converter.makeHtml(f)}</${tag}>`
                   }).join('')
                 }
                 </tr>`
